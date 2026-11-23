@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peer Radar — the token launch board priced by its own market</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="masthead">
+  <div class="mast-in">
+    <div class="brand">
+      <span class="blip" aria-hidden="true"></span>
+      <div>
+        <h1>PEER RADAR</h1>
+        <p class="tagline">Every pre-token protocol of the snapshot, priced off the tokened peers in its own category — never off a list of names.</p>
+      </div>
+    </div>
+    <div class="mast-meta" id="mastMeta"></div>
+  </div>
+  <p class="model-line" id="modelLine"></p>
+</header>
+
+<nav class="controls" aria-label="Board controls">
+  <div class="tabs" role="tablist">
+    <button id="tabBoard" class="tab on" type="button">Launch board</button>
+    <button id="tabLive" class="tab" type="button">Already trading <span class="tab-note">the peer evidence</span></button>
+  </div>
+  <label class="ctl grow">Search
+    <input id="q" type="search" placeholder="Protocol or category…" autocomplete="off">
+  </label>
+  <label class="ctl">Category
+    <select id="cat"><option value="">All categories</option></select>
+  </label>
+  <label class="ctl">Chain
+    <select id="chain"><option value="">All chains</option></select>
+  </label>
+  <label class="ctl check"><input id="watch" type="checkbox"> Watchlist only</label>
+  <span class="count" id="rowCount"></span>
+</nav>
+
+<main class="layout">
+  <section class="board-wrap">
+    <table class="board" id="boardTable">
+      <thead><tr>
+        <th data-sort="rank" class="num">Rank</th>
+        <th data-sort="name">Protocol</th>
+        <th data-sort="category">Category</th>
+        <th>Chains</th>
+        <th data-sort="tvl" class="num">TVL</th>
+        <th data-sort="change" class="num">7d</th>
+        <th data-sort="age" class="num">Age</th>
+        <th data-sort="peer" class="num">Peer ×</th>
+        <th data-sort="implied" class="num">Implied value</th>
+      </tr></thead>
+      <tbody id="boardBody"></tbody>
+    </table>
+    <table class="board hidden" id="liveTable">
+      <thead><tr>
+        <th>Protocol</th><th>Category</th><th>Chains</th>
+        <th class="num">TVL</th><th class="num">Market cap</th><th class="num">MCap / TVL</th><th class="num">7d</th>
+      </tr></thead>
+      <tbody id="liveBody"></tbody>
+    </table>
+    <p class="empty hidden" id="emptyMsg">No protocol matches those filters. Loosen one and the radar sweeps again.</p>
+  </section>
+
+  <aside class="detail" id="detail" aria-label="Protocol detail">
+    <p class="detail-hint">Pick any row: its price is taken apart here — every factor, the peers behind the multiple, and the plan to farm it.</p>
+  </aside>
+</main>
+
+<section class="howto">
+  <h2>How the price is made</h2>
+  <div class="howto-grid">
+    <div>
+      <p><strong>Implied value = TVL × peer multiple × growth × maturity.</strong> The peer multiple is the
+      median market-cap-to-TVL ratio of the protocols in the same category whose token already trades in
+      this snapshot — the market's own price for a dollar of TVL there. Growth rescales by the seven-day
+      TVL change, clamped to −50%…+100% at a weight of 0.45. Maturity rescales by how long the protocol
+      has run with no token recorded, on a square-root curve over four years: a launch priced after three
+      proven years is not the same claim as one priced after three weeks.</p>
+      <p>Protocols whose token already trades are never ranked. They stand on the <em>Already trading</em>
+      tab at the market's own values, and they are the evidence the multiples come from. The board also
+      applies the watchlist's own product rule at every size, not only above its floor: a wrapped,
+      staked or bridged product of a token that already trades — WBTC, Binance staked ETH, USDT0 and
+      their kin — is not a token that does not exist yet, so it is never ranked as a launch candidate,
+      whatever its TVL. A protocol the snapshot records no token for may still have one its record does
+      not carry; the board says “records no token”, never “has none”.</p>
+    </div>
+    <div>
+      <h3>Peer multiples in this snapshot</h3>
+      <table class="peers" id="peerTable">
+        <thead><tr><th>Category</th><th class="num">Median MCap/TVL</th><th class="num">Tokened peers</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p id="footLine"></p>
+  <p>Farm plans are the entry's own reading of each protocol's record: position sizes follow its TVL, fees follow the cheapest chain it runs on, and holds follow its age. Nothing here is a prediction that a token will be issued, or advice to farm any protocol.</p>
+</footer>
+
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
